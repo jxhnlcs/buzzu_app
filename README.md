@@ -52,7 +52,7 @@ Contribuições são bem-vindas! Se você deseja contribuir para o projeto, siga
 
 ## Autores
 
-- Mauricio Lobo Lima
-- John Lucas
-- Carla Saionara
-- Joabe Nascimento
+- [Mauricio Lobo Lima](https://www.linkedin.com/in/mauricio-lobo-lima-449066269/) - Desenvolvedor e Prototipagem
+- [John Lucas](https://www.linkedin.com/in/john-lucas-a23880208/) - Desenvolvedor e Prototipagem
+- [Carla Saionara](https://www.linkedin.com/in/carla-saionara-araujo-47b14a226/) - Designer, Prototipagem e Criação do Slide
+- [Joabe Nascimento](https://www.linkedin.com/in/joabe-nascimento-632345211/) Prototipagem e Criação do Slide
