@@ -23,22 +23,16 @@ Para rodar o sistema localmente, siga estas etapas:
 1. Clone o repositório do Buzzu:
 
     ```bash
-    git clone https://github.com/seu-usuario/buzzu.git
+    git clone https://github.com/jxhnlcs/buzzu_app.git
     ```
 
-2. Navegue até o diretório do projeto:
-
-    ```bash
-    cd buzzu
-    ```
-
-3. Instale as dependências:
+2. Instale as dependências:
 
     ```bash
     npm install
     ```
 
-4. Inicie o servidor Expo:
+3. Inicie o servidor Expo:
 
     ```bash
     expo start
