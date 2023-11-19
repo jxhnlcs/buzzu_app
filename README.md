@@ -1,5 +1,9 @@
 # Buzzu - Aplicativo de Transporte Público para Cidades Inteligentes
 
+![Buzzu Manager](https://cdn.discordapp.com/attachments/695042455724228638/1175611280179077231/Prancheta_2.png?ex=656bdc52&is=65596752&hm=8161d64447ad941903fcf38c17faaaba31ed7f64ce7eabf37321c7d21fd709aa&)
+
+## Descrição
+
 O Buzzu é um aplicativo desenvolvido durante o Hackathon Cidades Inteligentes, promovido pela Prefeitura de Feira de Santana em parceria com o SEBRAE. Ele é focado em simplificar a experiência de uso do transporte público na cidade, permitindo aos usuários localizar ônibus em tempo real, selecionar destinos e planejar rotas de maneira eficiente.
 
 ## Tecnologias Utilizadas
