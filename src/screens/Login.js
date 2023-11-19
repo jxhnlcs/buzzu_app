@@ -13,7 +13,7 @@ const HomeScreen = ({ navigation }) => {
 
         <TouchableOpacity
           style={styles.startButton}
-          onPress={() => navigation.navigate('OutraTela')}
+          onPress={() => navigation.navigate('Home')}
         >
           <Text style={styles.startButtonText}>Começar</Text>
 

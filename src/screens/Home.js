@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Dimensions, Text } from 'react-native';
+import { View, StyleSheet, Dimensions, Text, TouchableOpacity } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
+import { AntDesign } from '@expo/vector-icons'; // Importando o ícone da lupa
 import * as Location from 'expo-location';
 
 export default function App() {
@@ -46,6 +47,16 @@ export default function App() {
           <View style={styles.userMarker} />
         </Marker>
       </MapView>
+
+      <View style={styles.rectangleContainer}>
+        <View style={styles.rectangle}>
+          <TouchableOpacity style={styles.button}>
+            <AntDesign name="search1" size={24} color="white" style={styles.searchIcon} />
+            <Text style={styles.buttonText}>Para onde vamos?</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+
       {errorMsg && <Text>{errorMsg}</Text>}
     </View>
   );
@@ -69,5 +80,39 @@ const styles = StyleSheet.create({
     backgroundColor: '#3B82F6',
     borderWidth: 3,
     borderColor: '#E0ECFF',
+  },
+  rectangleContainer: {
+    position: 'absolute',
+    bottom: 15,
+    width: '100%',
+    alignItems: 'center',
+  },
+  rectangle: {
+    backgroundColor: 'white',
+    width: 365,
+    height: 185,
+    padding: 16,
+    borderRadius: 20,
+    borderWidth: 2,
+    borderColor: 'gray',
+  },
+  button: {
+    backgroundColor: '#076DDB',
+    borderColor: '#3B82F6',
+    borderWidth: 2,
+    borderRadius: 8,
+    width: 329, // largura desejada
+    height: 49, // altura desejada
+    padding: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  searchIcon: {
+    marginRight: 10,
   },
 });
