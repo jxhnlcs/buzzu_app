@@ -42,7 +42,6 @@ export default function App() {
           longitudeDelta: 0.0421,
         }}
       >
-        {/* Marcador do ônibus */}
         <Marker coordinate={{ latitude: busLocation.latitude, longitude: busLocation.longitude }}>
           <View style={styles.userMarker} />
         </Marker>
@@ -64,11 +63,11 @@ const styles = StyleSheet.create({
     height: Dimensions.get('window').height,
   },
   userMarker: {
-    width: 40,
-    height: 40,
+    width: 20,
+    height: 20,
     borderRadius: 20,
-    backgroundColor: 'blue', // Altera a cor do marcador para azul
-    borderWidth: 2,
-    borderColor: 'white',
+    backgroundColor: '#3B82F6',
+    borderWidth: 3,
+    borderColor: '#E0ECFF',
   },
 });
