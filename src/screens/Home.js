@@ -141,12 +141,13 @@ const styles = StyleSheet.create({
   },
   lastDestinationText: {
     fontSize: 16,
-    color: 'gray',
+    color: 'black',
+    fontWeight: 'bold',
   },
   separator: {
     borderBottomWidth: 1,
     borderBottomColor: 'gray',
     opacity: 0.2,
-    top:-55,
+    top: -55,
   },
 });
