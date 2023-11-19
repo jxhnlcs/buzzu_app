@@ -1,23 +1,67 @@
-import React from 'react';
-import { View, Text, Button, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import React, { useState } from "react";
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image } from "react-native";
 
-const HomeScreen = ({ navigation }) => {
+const App = ({ navigation }) => {
+  const [email, setEmail] = useState("exemplo@email.com");
+  const [senha, setSenha] = useState("senha");
+
+  const handleLogin = () => {
+    if (email === "exemplo@email.com" && senha === "senha") {
+      navigation.navigate('Home');
+    } else {
+      // Lógica de tratamento de erro ou exibição de mensagem
+    }
+  };
+
   return (
     <View style={styles.background}>
       <View style={styles.container}>
-
         <Image source={require('../assets/img/buzzu.png')} style={styles.imageBuzzu} />
-        <Image source={require('../assets/img/bus.png')} style={styles.imageBus} />
 
-        <Text style={styles.text}>Viaje com segurança</Text>
+        <Text style={styles.label}>E-mail</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Digite seu e-mail"
+          value={email}
+          onChangeText={setEmail}
+        />
+
+        <Text style={styles.label}>Senha</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Digite sua senha"
+          value={senha}
+          onChangeText={setSenha}
+          secureTextEntry
+        />
+
+        <TouchableOpacity>
+          <Text style={styles.link}>Não tem conta?</Text>
+        </TouchableOpacity>
 
         <TouchableOpacity
-          style={styles.startButton}
-          onPress={() => navigation.navigate('Home')}
+          style={styles.customButton}
+          onPress={handleLogin}
+          disabled={email === "" || senha === ""}
         >
-          <Text style={styles.startButtonText}>Começar</Text>
+          <Text style={styles.customButtonText}>Entrar</Text>
+        </TouchableOpacity>
 
-          <Image source={require('../assets/img/seta.png')} style={styles.arrowIcon} />
+
+        <View style={styles.orContainer}>
+          <View style={styles.orLine} />
+          <Text style={styles.orText}>ou</Text>
+          <View style={styles.orLine} />
+        </View>
+
+        <TouchableOpacity style={styles.continueWithGoogleButton}>
+          <View style={styles.googleContainer}>
+            <Image
+              source={require('../assets/img/google.png')}
+              style={styles.googleLogo}
+            />
+            <Text style={styles.continueWithGoogleText}>Continuar com o Google</Text>
+          </View>
         </TouchableOpacity>
       </View>
     </View>
@@ -27,21 +71,14 @@ const HomeScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#0734BD',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#0734BD",
   },
 
   container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-
-  title: {
-    fontSize: 24,
-    color: '#FFFFFF',
-    marginBottom: 20,
+    alignItems: "center",
+    justifyContent: "center",
   },
 
   imageBuzzu: {
@@ -50,40 +87,97 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
 
-  imageBus: {
-    width: 250,
-    height: 250,
+  label: {
+    color: "#FFFFFF",
+    alignSelf: "flex-start",
+    fontSize: 22,
+    fontWeight: 'bold',
+    marginBottom: 5,
+    marginLeft: 25,
+  },
+
+  input: {
+    height: 40,
+    borderColor: "#ccc",
+    borderWidth: 1,
+    borderRadius: 10,
+    fontSize: 20,
+    height: 59,
+    marginBottom: 10,
+    backgroundColor: "#D9D9D9",
+    width: 340,
+  },
+
+  customButton: {
+    backgroundColor: "#1F2937",
+    borderRadius: 10,
+    height: 60,
+    width: 340,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 20,
+  },
+
+  link: {
+    color: "#FFFFFF",
+    textDecorationLine: "underline",
+    marginTop: 5,
+    marginLeft: 230,
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+
+  customButtonText: {
+    color: "#FFFFFF",
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+
+  orContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 20,
     marginVertical: 10,
   },
 
-  text: {
-    color: 'white',
-    fontSize: 24,
-  },
-
-  startButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#3B82F6',
-    width: 340,
-    height: 63,
-    padding: 10,
-    marginTop: 100,
-    borderRadius: 12,
-  },
-
-  startButtonText: {
+  orLine: {
     flex: 1,
-    color: '#FFFFFF',
-    fontSize: 18,
-    textAlign: 'center',
+    height: 2,
+    backgroundColor: "#FFFFFF",
   },
 
-  arrowIcon: {
-    width: 20,
-    height: 20,
-    tintColor: '#FFFFFF',
+  orText: {
+    color: "#FFFFFF",
+    marginHorizontal: 10,
+    fontWeight: "bold",
   },
+
+  continueWithGoogleButton: {
+    backgroundColor: "#FFFFFF1A",
+    borderRadius: 5,
+    marginTop: 10,
+    width: 340,
+    height: 60,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  googleContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+
+  googleLogo: {
+    width: 24,
+    height: 24,
+    marginRight: 10,
+  },
+  continueWithGoogleText: {
+    color: "white",
+    textAlign: "center",
+    fontWeight: "bold",
+    fontSize: 18,
+  },
+
 });
 
-export default HomeScreen;
+export default App;
