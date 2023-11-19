@@ -1,24 +1,45 @@
-import React from 'react';
-import { View, Text, Button, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from "react";
+import { StyleSheet, Text, View, TextInput, Button, TouchableOpacity, Image } from "react-native";
 
-const HomeScreen = ({ navigation }) => {
+const App = ({ navigation }) => {
+  const [email, setEmail] = useState("exemplo@email.com");
+  const [senha, setSenha] = useState("senha");
+
+
+  const handleLogin = () => {
+    if (email === "exemplo@email.com" && senha === "senha") {
+      navigation.navigate('Home');
+    } else {
+      // Lógica de tratamento de erro ou exibição de mensagem
+    }
+  };
+
   return (
     <View style={styles.background}>
       <View style={styles.container}>
-
         <Image source={require('../assets/img/buzzu.png')} style={styles.imageBuzzu} />
-        <Image source={require('../assets/img/bus.png')} style={styles.imageBus} />
-
-        <Text style={styles.text}>Viaje com segurança</Text>
-
-        <TouchableOpacity
-          style={styles.startButton}
-          onPress={() => navigation.navigate('OutraTela')}
-        >
-          <Text style={styles.startButtonText}>Começar</Text>
-
-          <Image source={require('../assets/img/seta.png')} style={styles.arrowIcon} />
-        </TouchableOpacity>
+        <View style={styles.form}>
+          <TextInput
+            style={styles.input}
+            placeholder="E-mail"
+            value={email}
+            onChangeText={setEmail}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Senha"
+            value={senha}
+            onChangeText={setSenha}
+            secureTextEntry
+          />
+        </View>
+        <View style={styles.buttons}>
+          <Button
+            title="Entrar"
+            onPress={handleLogin}
+            disabled={email === "" || senha === ""}
+          />
+        </View>
       </View>
     </View>
   );
@@ -27,63 +48,41 @@ const HomeScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#0734BD',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#0734BD",
   },
-
   container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
-
   title: {
     fontSize: 24,
-    color: '#FFFFFF',
-    marginBottom: 20,
+    fontWeight: "bold",
+    color: "#FFFFFF",
   },
-
   imageBuzzu: {
     width: 200,
     height: 100,
     marginVertical: 10,
   },
-
-  imageBus: {
-    width: 250,
-    height: 250,
-    marginVertical: 10,
+  form: {
+    width: 300,
+    margin: 20,
   },
-
-  text: {
-    color: 'white',
-    fontSize: 24,
-  },
-
-  startButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#3B82F6',
-    width: 340,
-    height: 63,
+  input: {
+    height: 40,
+    borderColor: "#ccc",
+    borderWidth: 1,
+    borderRadius: 5,
     padding: 10,
-    marginTop: 100,
-    borderRadius: 12,
+    marginBottom: 10,
+    backgroundColor: "#FFFFFF",
   },
-
-  startButtonText: {
-    flex: 1,
-    color: '#FFFFFF',
-    fontSize: 18,
-    textAlign: 'center',
-  },
-
-  arrowIcon: {
-    width: 20,
-    height: 20,
-    tintColor: '#FFFFFF',
+  buttons: {
+    flexDirection: "row",
+    marginTop: 20,
   },
 });
 
-export default HomeScreen;
+export default App;
