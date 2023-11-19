@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Dimensions, Text, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Dimensions, Text, TouchableOpacity, Image } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
-import { AntDesign } from '@expo/vector-icons'; // Importando o ícone da lupa
+import { AntDesign } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
 import * as Location from 'expo-location';
 
 export default function App() {
-  const [busLocation, setBusLocation] = useState(null);
+  const [userLocation, setUserLocation] = useState(null);
+  const [busLocations, setBusLocations] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const [lastDestinations, setLastDestinations] = useState([
     'Shopping Boulevard',
     'Parque da Cidade',
   ]);
+  const BusIcon = require('../assets/img/busIcon.png');
 
   useEffect(() => {
     (async () => {
@@ -21,14 +24,38 @@ export default function App() {
       }
 
       let location = await Location.getCurrentPositionAsync({});
-      setBusLocation({
+      setUserLocation({
         latitude: location.coords.latitude,
         longitude: location.coords.longitude,
       });
+
+      // Exemplo de adição de 20 ônibus com localizações simuladas aleatórias próximas à localização do usuário
+      const buses = Array.from({ length: 5 }, (_, index) => ({
+        latitude: location.coords.latitude + (Math.random() * 0.01 - 0.005), // Variação pequena na latitude
+        longitude: location.coords.longitude + (Math.random() * 0.01 - 0.005), // Variação pequena na longitude
+        id: index.toString(), // ID único para cada ônibus
+      }));
+      setBusLocations(buses);
     })();
   }, []);
 
-  if (!busLocation) {
+  useEffect(() => {
+    const interval = setInterval(() => {
+      // Simulando o movimento dos ônibus (adicionando pequenas variações às localizações)
+      if (busLocations.length > 0) {
+        const updatedBuses = busLocations.map(bus => ({
+          ...bus,
+          latitude: bus.latitude + (Math.random() * 0.0001 - 0.00005), // Variação pequena na latitude
+          longitude: bus.longitude + (Math.random() * 0.0001 - 0.00005), // Variação pequena na longitude
+        }));
+        setBusLocations(updatedBuses);
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [busLocations]);
+
+  if (!busLocations) {
     return (
       <View style={styles.container}>
         <Text>Carregando...</Text>
@@ -41,16 +68,37 @@ export default function App() {
       <MapView
         style={styles.map}
         initialRegion={{
-          latitude: busLocation.latitude,
-          longitude: busLocation.longitude,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
+          latitude: userLocation.latitude,
+          longitude: userLocation.longitude,
+          latitudeDelta: 0.02,
+          longitudeDelta: 0.02,
         }}
       >
-        <Marker coordinate={{ latitude: busLocation.latitude, longitude: busLocation.longitude }}>
+        <Marker coordinate={{ latitude: userLocation.latitude, longitude: userLocation.longitude }}>
           <View style={styles.userMarker} />
         </Marker>
+
+        {busLocations.map(bus => (
+          <Marker key={bus.id} coordinate={{ latitude: bus.latitude, longitude: bus.longitude }}>
+            <Image source={BusIcon} style={styles.busImage} />
+          </Marker>
+        ))}
       </MapView>
+
+      <TouchableOpacity style={styles.menuButton}>
+        <MaterialIcons name="menu" size={24} color="black" />
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.menuLocation}>
+        <MaterialIcons name="my-location" size={24} color="black" />
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.temp}>
+        <MaterialIcons name="wb-sunny" size={18} color="yellow" />
+        <Text style={styles.tempText}>39°</Text>
+      </TouchableOpacity>
+
+
 
       <View style={styles.rectangleContainer}>
         <View style={styles.rectangle}>
@@ -94,6 +142,11 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     borderColor: '#E0ECFF',
   },
+  busImage: {
+    width: 40,
+    height: 40,
+    resizeMode: 'contain',
+  },
   rectangleContainer: {
     position: 'absolute',
     bottom: 15,
@@ -124,12 +177,14 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
     textAlign: 'center',
+    fontSize: 20,
   },
   searchIcon: {
     marginRight: 10,
   },
   historyContainer: {
     marginTop: 10,
+    marginLeft: 7
   },
   destinationContainer: {
     flexDirection: 'row',
@@ -149,5 +204,72 @@ const styles = StyleSheet.create({
     borderBottomColor: 'gray',
     opacity: 0.2,
     top: -55,
+  },
+  menuButton: {
+    position: 'absolute',
+    top: 40,
+    left: 20,
+    width: 50,
+    height: 50,
+    backgroundColor: 'white',
+    borderRadius: 25,
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  menuLocation: {
+    position: 'absolute',
+    bottom: 210,
+    right: 20,
+    width: 50,
+    height: 50,
+    backgroundColor: 'white',
+    borderRadius: 25,
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+
+  temp: {
+    position: 'absolute',
+    display:'flex',
+    bottom: 210,
+    right: 300,
+    width: 60,
+    height: 30,
+    backgroundColor: 'white',
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: "row",
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+
+  tempText:{
+    color:'black',
+    fontSize:10,
+    fontWeight:'bold',
+    
   },
 });
