@@ -1,31 +1,80 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Dimensions, Text, TouchableOpacity } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
-import { AntDesign } from '@expo/vector-icons'; // Importando o ícone da lupa
+import { AntDesign } from '@expo/vector-icons';
 import * as Location from 'expo-location';
+import Animated from 'react-native-reanimated';
+
+const { Value, event, block, cond, set, clockRunning, startClock, stopClock, timing, Easing } = Animated;
 
 export default function App() {
   const [busLocation, setBusLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
-  const [lastDestinations, setLastDestinations] = useState([
-    'Shopping Boulevard',
-    'Parque da Cidade',
-  ]);
+  const [lastDestinations, setLastDestinations] = useState(['Shopping Boulevard', 'Parque da Cidade']);
+  const translateX = new Value(0);
+  const translateY = new Value(0);
+  const markerAnimation = new Value(0);
+
+  const clock = new Animated.Clock();
+  const startAnimation = clockRunning(clock);
+
+  const runTiming = (clock, value, dest, duration) => {
+    const state = {
+      finished: new Value(0),
+      position: value,
+      time: new Value(0),
+      frameTime: new Value(0),
+    };
+
+    const config = {
+      duration,
+      toValue: dest,
+      easing: Easing.inOut(Easing.ease),
+    };
+
+    return block([
+      cond(clockRunning(clock), 0, [
+        set(state.finished, 0),
+        set(state.time, 0),
+        set(state.frameTime, 0),
+        set(state.position, value),
+        startClock(clock),
+      ]),
+      timing(clock, state, config),
+      cond(state.finished, stopClock(clock)),
+      state.position,
+    ]);
+  };
 
   useEffect(() => {
-    (async () => {
+    const getLocationAsync = async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
         setErrorMsg('Permissão para acesso à localização foi negada.');
         return;
       }
 
-      let location = await Location.getCurrentPositionAsync({});
+      const location = await Location.getCurrentPositionAsync({});
       setBusLocation({
         latitude: location.coords.latitude,
         longitude: location.coords.longitude,
       });
-    })();
+
+      const newLocation = {
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+      };
+
+      Animated.parallel([
+        set(markerAnimation, 1),
+        cond(startAnimation, [
+          set(translateX, runTiming(clock, translateX, newLocation.longitude, 500)),
+          set(translateY, runTiming(clock, translateY, newLocation.latitude, 500)),
+        ]),
+      ]).start();
+    };
+
+    getLocationAsync();
   }, []);
 
   if (!busLocation) {
@@ -47,9 +96,29 @@ export default function App() {
           longitudeDelta: 0.0421,
         }}
       >
-        <Marker coordinate={{ latitude: busLocation.latitude, longitude: busLocation.longitude }}>
-          <View style={styles.userMarker} />
-        </Marker>
+        <Animated.View
+          style={[
+            styles.userMarker,
+            {
+              transform: [
+                {
+                  translateX: Animated.interpolate(markerAnimation, {
+                    inputRange: [0, 1],
+                    outputRange: [0, translateX],
+                  }),
+                },
+                {
+                  translateY: Animated.interpolate(markerAnimation, {
+                    inputRange: [0, 1],
+                    outputRange: [0, translateY],
+                  }),
+                },
+              ],
+            },
+          ]}
+        >
+          <AntDesign name="car" size={24} color="white" />
+        </Animated.View>
       </MapView>
 
       <View style={styles.rectangleContainer}>
@@ -93,6 +162,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#3B82F6',
     borderWidth: 3,
     borderColor: '#E0ECFF',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   rectangleContainer: {
     position: 'absolute',
@@ -147,7 +218,7 @@ const styles = StyleSheet.create({
   separator: {
     borderBottomWidth: 1,
     borderBottomColor: 'gray',
-    opacity: 0.2,
+    opacity: 0.5,
     top: -55,
   },
 });
